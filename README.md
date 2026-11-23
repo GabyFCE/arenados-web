@@ -1,103 +1,146 @@
-# Sitio de Arenados — cómo está armado y qué falta
+# Arenados — sitio web
 
-Tres archivos y una carpeta de imágenes. Sin frameworks, sin build, sin dependencias:
-se abre `index.html` y funciona.
+Sitio estático de una página para el servicio de arenado industrial (Zona Norte, GBA).
+Sin frameworks, sin build y sin dependencias: tres archivos y una carpeta de imágenes.
+Se abre `index.html` y funciona.
+
+**Estado: borrador publicable.** Faltan los datos reales de contacto y el endpoint del
+formulario (ver *Checklist antes de publicar*).
+
+---
+
+## Verlo en tu máquina
+
+Doble clic en `index.html` alcanza. Si querés servirlo como en producción (necesario para
+probar rutas y el formulario):
+
+```bash
+python3 -m http.server 8000
+# abrir http://127.0.0.1:8000
+```
+
+## Estructura
 
 ```
 sitio/
 ├── index.html    estructura y textos
-├── styles.css    sistema visual (paleta, tipografía, componentes, responsive)
+├── styles.css    sistema visual: paleta, tipografía, componentes, responsive
 ├── script.js     menú móvil, animaciones, comparador antes/después, formulario
-└── assets/       10 fotos (antes/después de 5 piezas) recortadas a 1400 px
+└── assets/       10 fotos (antes/después de 5 piezas), recortadas a 1400 px
 ```
 
-## Estructura elegida
+Secciones de la página, en orden: hero → datos → proceso → casos de uso → trabajos
+(comparador) → cotizar → pie de contacto.
 
-Landing de una sola página con navegación por anclas. El contenido de una pyme de
-servicio no da para un sitio de varias páginas: la decisión de contacto tiene que
-poder tomarse sin navegar. Las secciones siguen el recorrido lógico de un cliente
-técnico:
+## Editar
 
-1. **Hero** — qué hace y para quién, con la norma técnica como prueba.
-2. **Datos** — los cuatro números que un comprador industrial busca (grado, perfil, plazo, abrasivo).
-3. **Proceso** — qué pasa con la pieza, en tres etapas.
-4. **Casos de uso** — seis tipos de pieza, cada uno con el problema concreto que resuelve.
-5. **Trabajos** — comparador arrastrable antes/después.
-6. **Cotizar** — qué datos hacen falta + formulario.
-7. **Pie** — contacto, horarios, aviso sobre las imágenes.
+### Textos
+Todo el contenido está en `index.html`, en el orden en que se ve. No hay CMS ni plantillas:
+se edita el HTML y se guarda.
 
-## Paleta
+### Fotos
+El comparador antes/después espera pares con nombre fijo dentro de `assets/`:
 
-| Token | Valor | Uso |
-|---|---|---|
-| `--ink-900` | `#0F1115` | fondo del hero y del pie |
-| `--ink-800` | `#15181E` | franja de datos |
-| `--paper` | `#F5F4F1` | fondo general (blanco cálido, no puro) |
-| `--paper-2` | `#EBE8E2` | sección de casos |
-| `--copper` | `#B4602C` | acento único: CTA, etiquetas, reglas |
-| `--text` | `#14161A` | texto principal |
-| `--muted` | `#6B7280` | texto secundario |
+```
+<pieza>-antes.jpg
+<pieza>-despues.jpg
+```
 
-El cobre es el único color saturado y aparece en menos del 5% de la superficie. La
-paleta no usa el óxido como decoración: el óxido es lo que se saca, no la identidad.
+Las cinco piezas actuales: `bloque-motor`, `carcasa-bomba`, `carcasa-gases`,
+`cartera-compresor`, `cuadro-moto`. Para reemplazar una foto, se sobrescribe el archivo
+con el mismo nombre y no hay que tocar el HTML.
 
-Tipografía: **Inter** (300–600) para todo, **JetBrains Mono** para etiquetas y cifras.
-Las dos se cargan de Google Fonts; si no hay red, caen a las del sistema.
+Las imágenes actuales son generadas: antes de publicar hay que reemplazarlas por fotos
+reales y borrar el aviso del final de la sección.
 
-El formulario apunta a Formspree. Mientras `FORM_ENDPOINT` tenga el marcador `XXXXXXXX`,
-cae al envío por correo (`mailto:`) y lo avisa en pantalla.
+Recomendaciones: JPEG, 1400 px de ancho, menos de 300 KB cada una; las dos fotos de un par
+tienen que estar encuadradas igual para que el comparador no salte.
 
-## Tono de los textos
+### Colores y tipografía
+Están como variables al principio de `styles.css`:
 
-Registro formal, sin tuteo: «solicite», «consulte», «se retira», «su pieza». El sitio habla
-con un comprador técnico pero no le explica normas ni unidades: describe qué se hace y qué
-se obtiene. Los estándares (grado de limpieza, perfil de anclaje) se dan en la conversación
-comercial, no en la página.
+```css
+:root {
+  --ink-900: #0F1115;   /* fondo del hero y del pie */
+  --ink-800: #15181E;   /* franja de datos */
+  --paper:   #F5F4F1;   /* fondo general */
+  --paper-2: #EBE8E2;   /* sección de casos */
+  --copper:  #B4602C;   /* acento único: CTA, etiquetas, reglas */
+  --text:    #14161A;
+  --muted:   #6B7280;
+}
+```
 
-## Qué reemplazar antes de publicar
+Tipografía: **Inter** (300–600) para todo y **JetBrains Mono** para etiquetas y cifras.
+Se cargan de Google Fonts; sin red caen a las del sistema.
 
-- [ ] **Datos del pie** (marcados con `<!-- TODO -->` en `index.html`): dirección, teléfono, email.
-- [ ] **Endpoint del formulario**: `FORM_ENDPOINT` en `script.js` (ver abajo).
-- [ ] **Email de respaldo**: `MAIL_RESPALDO` en `script.js` (hoy `presupuestos@arenados.com.ar`).
-- [ ] **Fotos de la galería**: las actuales son ilustraciones generadas. Reemplazar por fotos
-      reales con el mismo nombre de archivo (`<pieza>-antes.jpg` / `<pieza>-despues.jpg`) y
-      borrar el aviso del final de la sección.
-- [ ] **Plazos y capacidad**: "7 días" y "zona norte" son valores de ejemplo.
-- [ ] **Metadatos**: `og:image`, `description`, y agregar favicon.
+### Formulario
+En `script.js`:
 
-## El formulario (Formspree)
+```js
+var FORM_ENDPOINT = window.ARENADOS_FORM_ENDPOINT || "https://formspree.io/f/XXXXXXXX";
+var MAIL_RESPALDO  = "presupuestos@arenados.com.ar";
+```
 
-Envía por `POST` a Formspree, sin backend. Plan gratuito: 50 envíos por mes y 30 días de
-historial. La validación corre en el navegador antes de enviar.
+Mientras `FORM_ENDPOINT` conserve el marcador `XXXXXXXX`, el sitio envía por el cliente de
+correo (`mailto:` a `MAIL_RESPALDO`) y lo avisa en pantalla. Para activar Formspree: crear
+cuenta, crear un formulario y pegar la URL con forma `https://formspree.io/f/abcdwxyz`.
+Plan gratuito: 50 envíos por mes.
 
-### Activarlo (5 minutos)
+Ya está resuelto: campo trampa `_gotcha` contra bots, asunto «Pedido de presupuesto — <nombre>»,
+mensajes de éxito y error, y envío sin recargar la página.
 
-1. Crear cuenta en `formspree.io` con el mail del taller.
-2. Crear un formulario nuevo y copiar la URL, con esta forma: `https://formspree.io/f/abcdwxyz`.
-3. Pegarla en `script.js`:
+## Trabajar con git
 
-   ```js
-   var FORM_ENDPOINT = window.ARENADOS_FORM_ENDPOINT || "https://formspree.io/f/XXXXXXXX";
-   ```
+```bash
+# primera vez
+git clone https://github.com/GabyFCE/arenados-web.git
+cd arenados-web
 
-   Reemplazar `https://formspree.io/f/XXXXXXXX` por la URL real. Mientras quede el marcador,
-   el sitio funciona igual pero envía por el cliente de correo y lo aclara en pantalla.
-4. Mandar una prueba desde el sitio y confirmar que llega el mail (revisar spam la primera vez).
+# cambios
+git checkout -b fix/telefono-pie     # una rama por cambio, no commitear en main
+git add -A
+git commit -m "fix: telefono real en el pie"
+git push -u origin fix/telefono-pie
+```
 
-### Qué ya está resuelto
+Después se abre el PR en GitHub y se mergea. Para ver qué cambió antes de commitear:
+`git diff`.
 
-- **Antibot**: campo trampa `_gotcha` oculto. Si viene completo, se descarta sin avisar.
-- **Asunto**: cada envío llega con «Pedido de presupuesto — <nombre>».
-- **Estados**: mensaje de éxito, mensaje de error si falla el envío, botón bloqueado mientras envía.
-- **Sin recarga**: `fetch`, el visitante no sale de la página.
+## Publicar
 
-### Sin Formspree
+El sitio es 100% estático: cualquier servidor que sirva archivos alcanza.
 
-Si preferís no depender de un servicio: un endpoint PHP/Node propio que reciba `POST` y mande
-el mail por SMTP. Requiere hosting con backend y configurar SPF/DKIM, o los mails caen en spam.
+- **Hosting compartido (cPanel/FTP)**: subir el contenido de `sitio/` a `public_html`,
+  respetando la carpeta `assets/`.
+- **Netlify / Vercel / Cloudflare Pages**: conectar el repo y publicar; sin comando de build,
+  directorio de salida `/` (o `sitio` si subís el repo entero).
+- **GitHub Pages**: requiere repo público (en privado necesita plan pago), así que con este
+  repo no sirve tal cual.
 
-## Compatibilidad
+Requisitos mínimos al publicar:
+- HTTPS (cualquiera de las opciones de arriba lo da).
+- Que `assets/` se sirva con cache largo y `index.html` sin cache, para no servir versiones viejas.
+- Un favicon y `og:image` reales: hoy los metadatos son provisorios.
 
-Chrome, Firefox, Safari y Edge actuales. Usa `clip-path`, `IntersectionObserver` y
-`pointer events`; si el navegador es viejo, el comparador queda en 50% y el resto del
-sitio sigue funcionando. Respeta `prefers-reduced-motion`.
+## Checklist antes de publicar
+
+- [ ] **Datos del pie**: dirección, teléfono y email reales (en `index.html`, bloque marcado
+      `<!-- TODO: reemplazar por los datos reales de la empresa -->`).
+- [ ] **`FORM_ENDPOINT`** con la URL real de Formspree.
+- [ ] **`MAIL_RESPALDO`** con un buzón que se lea.
+- [ ] **Fotos reales** en `assets/` (mismos nombres) y borrar el aviso de imágenes ilustrativas.
+- [ ] **Plazos y zona**: «7 días» y «zona norte» son valores de ejemplo.
+- [ ] **Metadatos**: `description`, `og:image`, favicon.
+- [ ] Probar el formulario de punta a punta y mirar si el mail llega (y no a spam).
+
+## Notas de diseño
+
+- **Una sola página con anclas**: en una pyme de servicio la decisión de contacto tiene que
+  poder tomarse sin navegar.
+- **Un solo acento**: el cobre aparece en menos del 5% de la superficie. La paleta no usa el
+  óxido como decoración — el óxido es lo que se saca, no la identidad.
+- **Tono**: registro formal, sin tuteo. Habla con un comprador técnico sin explicarle normas ni
+  unidades: describe qué se hace y qué se obtiene.
+- **Compatibilidad**: Chrome, Firefox, Safari y Edge actuales. Si el navegador es viejo, el
+  comparador queda al 50% y el resto sigue funcionando. Respeta `prefers-reduced-motion`.
