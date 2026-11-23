@@ -1,0 +1,33 @@
+# Credenciales y configuración local
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+.npmrc
+.netrc
+credentials.json
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.vscode/
+.idea/
+
+# Dependencias y temporales
+node_modules/
+*.log
+*.bak
+*.bak-*
+*.tmp
+
+# Fuentes de las fotos (los originales no se publican)
+pares-arenados.zip
+fotos_fuente/

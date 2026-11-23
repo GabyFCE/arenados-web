@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# pre-commit: bloquea commits que incluyan credenciales o archivos sensibles.
+# Sin dependencias: usa solo git y grep.
+# Para saltearlo una vez: git commit --no-verify
+set -u
+
+fail=0
+names='(^|/)\.env($|\.)|\.(pem|key|p12|pfx)$|(^|/)id_(rsa|ed25519)|(^|/)\.(npmrc|netrc)$|(^|/)credentials\.json$'
+secrets='github_pat_[A-Za-z0-9_]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY-----|xox[baprs]-[A-Za-z0-9-]{10,}|AIza[0-9A-Za-z_-]{30,}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{5,}'
+assign='(password|passwd|secret|api[_-]?key|access[_-]?token|auth[_-]?token)[[:space:]]*[:=][[:space:]]*["'"'"'][^"'"'"']{8,}'
+size_limit=$((5 * 1024 * 1024))
+
+while IFS= read -r f; do
+  [ -n "$f" ] || continue
+
+  if printf '%s\n' "$f" | grep -qE "$names"; then
+    printf 'BLOQUEADO: %s parece un archivo de credenciales.\n' "$f" >&2
+    fail=1
+    continue
+  fi
+
+  bytes=$(git cat-file -s ":$f" 2>/dev/null || echo 0)
+  if [ "$bytes" -gt "$size_limit" ]; then
+    printf 'BLOQUEADO: %s pesa %s KB (limite 5 MB). Usa Git LFS.\n' "$f" $((bytes / 1024)) >&2
+    fail=1
+  fi
+
+  # solo texto: grep -I salta binarios
+  if git show ":$f" 2>/dev/null | grep -IqE "$secrets|$assign"; then
+    printf 'BLOQUEADO: %s contiene lo que parece una credencial.\n' "$f" >&2
+    git show ":$f" 2>/dev/null | grep -InE "$secrets|$assign" | head -3 | sed 's/^/    linea /' >&2
+    fail=1
+  fi
+done < <(git diff --cached --name-only --diff-filter=ACM)
+
+if [ "$fail" -eq 1 ]; then
+  printf '\nCommit cancelado. Sacá el secreto del archivo (o usa --no-verify si es un falso positivo).\n' >&2
+  printf 'Ver: git restore --staged <archivo>\n' >&2
+  exit 1
+fi
+exit 0
