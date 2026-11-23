@@ -96,6 +96,7 @@ mensajes de éxito y error, y envío sin recargar la página.
 # primera vez
 git clone https://github.com/GabyFCE/arenados-web.git
 cd arenados-web
+git config core.hooksPath scripts/hooks   # activa el control de credenciales
 
 # cambios
 git checkout -b fix/telefono-pie     # una rama por cambio, no commitear en main
@@ -106,6 +107,18 @@ git push -u origin fix/telefono-pie
 
 Después se abre el PR en GitHub y se mergea. Para ver qué cambió antes de commitear:
 `git diff`.
+
+### Control de credenciales
+
+`scripts/hooks/pre-commit` corre antes de cada commit y lo cancela si detecta:
+
+- archivos con nombre sensible (`.env`, `*.pem`, `*.key`, `id_rsa`, `credentials.json`);
+- tokens conocidos (`github_pat_`, `ghp_`, `sk-`, `AKIA`, claves privadas, JWT, `xox?-`, claves de Google);
+- asignaciones del tipo `password = "..."`, `api_key = "..."`, `secret = "..."`;
+- archivos de más de 5 MB (para eso está Git LFS).
+
+Se activa una vez por clon con `git config core.hooksPath scripts/hooks`; si no se activa, el
+hook no corre. Para saltearlo en un caso puntual: `git commit --no-verify`.
 
 ## Publicar
 
