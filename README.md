@@ -1,188 +1,61 @@
 # Arenados — sitio web
 
-Sitio estático de una página para el servicio de arenado industrial (Zona Norte, GBA).
-Sin frameworks, sin build y sin dependencias: tres archivos y una carpeta de imágenes.
-Se abre `index.html` y funciona.
+Sitio institucional de una sola página para un servicio de arenado industrial en Zona Norte
+del Gran Buenos Aires. Presenta el proceso, muestra el resultado sobre piezas de taller y
+ofrece un formulario para pedir presupuesto.
 
-**Estado: borrador publicable.** Faltan los datos reales de contacto y el endpoint del
-formulario (ver *Checklist antes de publicar*).
+Es un proyecto de diseño y desarrollo web. La página está terminada y verificada; su contenido
+comercial todavía es de muestra.
 
----
+## Qué cuenta la página
 
-## Verlo en tu máquina
+- **Servicio.** Qué se hace, sobre qué materiales y con qué terminación.
+- **Datos operativos.** Plazo de entrega, capacidad de trabajo y zona de cobertura.
+- **Proceso.** Cuatro pasos: diagnóstico de la pieza, preparación, arenado y control final.
+- **Casos de uso.** Piezas típicas por rubro: fundición, maquinaria, automotor y estructuras.
+- **Antes y después.** Cinco piezas comparadas con un control deslizante que responde al
+  mouse, al dedo y a las flechas del teclado.
+- **Presupuesto.** Formulario de cinco campos, con tres obligatorios.
+- **Contacto.** Pie con teléfono, correo y dirección.
 
-Doble clic en `index.html` alcanza. Si querés servirlo como en producción (necesario para
-probar rutas y el formulario):
+## Cómo está hecho
 
-```bash
-python3 -m http.server 8000
-# abrir http://127.0.0.1:8000
-```
+HTML, CSS y JavaScript, sin frameworks, sin compilación y sin dependencias externas. El sitio
+completo pesa 1,8 MB, de los cuales 1,7 MB son las imágenes del comparador.
 
-## Estructura
+La tipografía principal es Inter; las etiquetas y las cifras usan la monoespaciada del
+sistema, así que hay una sola descarga de fuentes.
 
-```
-sitio/
-├── index.html    estructura y textos
-├── styles.css    sistema visual: paleta, tipografía, componentes, responsive
-├── script.js     menú móvil, animaciones, comparador antes/después, formulario
-├── favicon-*.png íconos de 16, 32 (pestaña) y 180 (pantalla de inicio en iPhone)
-├── favicon.ico   respaldo para marcadores viejos
-└── assets/       10 fotos (antes/después de 5 piezas), recortadas a 1400 px
-```
+El comparador antes/después no dibuja sobre un canvas: las dos fotos están superpuestas en el
+mismo encuadre y el control mueve un recorte. Son dos imágenes y una variable de estilo, sin
+pérdida de calidad y sin código dibujando píxeles.
 
-El favicon se genera desde `~/arenados-web/favicon.py`, con dos variantes:
+## Criterios de diseño
 
-```bash
-python3 ../favicon.py .            # boquilla de arenado (sale también en SVG)
-python3 ../favicon.py . --letra    # monograma A (sólo PNG e ICO)
-```
+**Una sola página.** La decisión de contacto se toma en una pantalla o no se toma. Cada
+sección responde una pregunta del comprador y la siguiente queda a un scroll.
 
-La que está publicada es el monograma A: a 16 px la boquilla se empasta y la letra no.
-El SVG existe sólo para la boquilla, porque ésa se dibuja como polígonos; la A sale de una
-tipografía y un vector obligaría a depender de la fuente del que mira.
+**Un solo acento.** El cobre aparece en menos del 5 % de la superficie: llamados a la acción,
+etiquetas y reglas finas. La paleta evita usar el óxido como decoración, porque el óxido es
+justamente lo que el servicio retira.
 
-Secciones de la página, en orden: hero → datos → proceso → casos de uso → trabajos
-(comparador) → cotizar → pie de contacto.
+**Tono formal.** Sin tuteo. Le habla a un comprador técnico que ya conoce el oficio: describe
+qué se hace y qué se obtiene, sin explicar normas ni unidades.
 
-## Editar
+## Accesibilidad
 
-### Textos
-Todo el contenido está en `index.html`, en el orden en que se ve. No hay CMS ni plantillas:
-se edita el HTML y se guarda.
+Foco visible en todos los controles, etiquetas asociadas a cada campo, nombre accesible en el
+control del comparador y avisos del formulario anunciados a los lectores de pantalla. Los
+textos principales superan 15:1 de contraste; el cobre queda en 4,1 sobre el fondo claro, por
+eso se reserva para trazos y etiquetas y no para párrafos.
 
-### Fotos
-El comparador antes/después espera pares con nombre fijo dentro de `assets/`:
+Las apariciones al hacer scroll se disparan al entrar en pantalla, sin escuchar el evento de
+scroll, y todas las animaciones se desactivan cuando el sistema pide movimiento reducido.
 
-```
-<pieza>-antes.jpg
-<pieza>-despues.jpg
-```
+## Contenido
 
-Las cinco piezas: `bloque-motor`, `carcasa-bomba`, `carcasa-gases`, `cartera-compresor`,
-`cuadro-moto`. Para reemplazar una foto, se sobrescribe el archivo con el mismo nombre y no
-hay que tocar el HTML.
+Las imágenes de la sección «Antes y después» son ilustraciones generadas y la página lo
+declara en un aviso al pie de esa sección. Los datos de contacto del pie son provisorios.
 
-Las imágenes actuales son generadas: antes de publicar hay que reemplazarlas por fotos
-reales y borrar el aviso del final de la sección.
-
-### Cómo se arman las fotos generadas
-
-Los pares se arman fuera de este repo, en `~/arenados-web`:
-
-1. el modelo de imagen dibuja la pieza oxidada en un taller fijo (`pares3/<slug>-base.png`);
-2. una edición de esa misma foto devuelve la pieza arenada (`pares3/<slug>-clean.png`);
-3. `pares.py` reemplaza sólo los píxeles de la pieza y exporta a 1400 px.
-
-El paso 3 es el que garantiza el entorno idéntico: fuera del contorno de la pieza, los dos
-archivos del par son los mismos píxeles. Detalle, parámetros y trampas: skill
-`pares-antes-despues-arenado`.
-
-**Pendiente al reemplazar las fotos**: el par del motor pasa a `motor-electrico` (era un
-bloque de motor que aparecía flotando) y `cartera-compresor` está mal escrito — es `cárter`.
-Renombrar archivos y actualizar el HTML en el mismo commit.
-
-Recomendaciones: JPEG, 1400 px de ancho, menos de 300 KB cada una; las dos fotos de un par
-tienen que estar encuadradas igual para que el comparador no salte.
-
-### Colores y tipografía
-Están como variables al principio de `styles.css`:
-
-```css
-:root {
-  --ink-900: #0F1115;   /* fondo del hero y del pie */
-  --ink-800: #15181E;   /* franja de datos */
-  --paper:   #F5F4F1;   /* fondo general */
-  --paper-2: #EBE8E2;   /* sección de casos */
-  --copper:  #B4602C;   /* acento único: CTA, etiquetas, reglas */
-  --text:    #14161A;
-  --muted:   #6B7280;
-}
-```
-
-Tipografía: **Inter** (300–600) para todo y **JetBrains Mono** para etiquetas y cifras.
-Se cargan de Google Fonts; sin red caen a las del sistema.
-
-### Formulario
-En `script.js`:
-
-```js
-var FORM_ENDPOINT = window.ARENADOS_FORM_ENDPOINT || "https://formspree.io/f/XXXXXXXX";
-var MAIL_RESPALDO  = "presupuestos@arenados.com.ar";
-```
-
-Mientras `FORM_ENDPOINT` conserve el marcador `XXXXXXXX`, el sitio envía por el cliente de
-correo (`mailto:` a `MAIL_RESPALDO`) y lo avisa en pantalla. Para activar Formspree: crear
-cuenta, crear un formulario y pegar la URL con forma `https://formspree.io/f/abcdwxyz`.
-Plan gratuito: 50 envíos por mes.
-
-Ya está resuelto: campo trampa `_gotcha` contra bots, asunto «Pedido de presupuesto — <nombre>»,
-mensajes de éxito y error, y envío sin recargar la página.
-
-## Trabajar con git
-
-```bash
-# primera vez
-git clone https://github.com/GabyFCE/arenados-web.git
-cd arenados-web
-git config core.hooksPath scripts/hooks   # activa el control de credenciales
-
-# cambios
-git checkout -b fix/telefono-pie     # una rama por cambio, no commitear en main
-git add -A
-git commit -m "fix: telefono real en el pie"
-git push -u origin fix/telefono-pie
-```
-
-Después se abre el PR en GitHub y se mergea. Para ver qué cambió antes de commitear:
-`git diff`.
-
-### Control de credenciales
-
-`scripts/hooks/pre-commit` corre antes de cada commit y lo cancela si detecta:
-
-- archivos con nombre sensible (`.env`, `*.pem`, `*.key`, `id_rsa`, `credentials.json`);
-- tokens conocidos (`github_pat_`, `ghp_`, `sk-`, `AKIA`, claves privadas, JWT, `xox?-`, claves de Google);
-- asignaciones del tipo `password = "..."`, `api_key = "..."`, `secret = "..."`;
-- archivos de más de 5 MB (para eso está Git LFS).
-
-Se activa una vez por clon con `git config core.hooksPath scripts/hooks`; si no se activa, el
-hook no corre. Para saltearlo en un caso puntual: `git commit --no-verify`.
-
-## Publicar
-
-El sitio es 100% estático: cualquier servidor que sirva archivos alcanza.
-
-- **Hosting compartido (cPanel/FTP)**: subir el contenido de `sitio/` a `public_html`,
-  respetando la carpeta `assets/`.
-- **Netlify / Vercel / Cloudflare Pages**: conectar el repo y publicar; sin comando de build,
-  directorio de salida `/` (o `sitio` si subís el repo entero).
-- **GitHub Pages**: requiere repo público (en privado necesita plan pago), así que con este
-  repo no sirve tal cual.
-
-Requisitos mínimos al publicar:
-- HTTPS (cualquiera de las opciones de arriba lo da).
-- Que `assets/` se sirva con cache largo y `index.html` sin cache, para no servir versiones viejas.
-- Un favicon y `og:image` reales: hoy los metadatos son provisorios.
-
-## Checklist antes de publicar
-
-- [ ] **Datos del pie**: dirección, teléfono y email reales (en `index.html`, bloque marcado
-      `<!-- TODO: reemplazar por los datos reales de la empresa -->`).
-- [ ] **`FORM_ENDPOINT`** con la URL real de Formspree.
-- [ ] **`MAIL_RESPALDO`** con un buzón que se lea.
-- [ ] **Fotos reales** en `assets/` (mismos nombres) y borrar el aviso de imágenes ilustrativas.
-- [ ] **Plazos y zona**: «7 días» y «zona norte» son valores de ejemplo.
-- [ ] **Metadatos**: `description`, `og:image`, favicon.
-- [ ] Probar el formulario de punta a punta y mirar si el mail llega (y no a spam).
-
-## Notas de diseño
-
-- **Una sola página con anclas**: en una pyme de servicio la decisión de contacto tiene que
-  poder tomarse sin navegar.
-- **Un solo acento**: el cobre aparece en menos del 5% de la superficie. La paleta no usa el
-  óxido como decoración — el óxido es lo que se saca, no la identidad.
-- **Tono**: registro formal, sin tuteo. Habla con un comprador técnico sin explicarle normas ni
-  unidades: describe qué se hace y qué se obtiene.
-- **Compatibilidad**: Chrome, Firefox, Safari y Edge actuales. Si el navegador es viejo, el
-  comparador queda al 50% y el resto sigue funcionando. Respeta `prefers-reduced-motion`.
+Mientras siga así, el sitio sirve para mostrar el diseño y el desarrollo; no es la vidriera
+comercial de una empresa en actividad.
