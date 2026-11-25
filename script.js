@@ -179,21 +179,18 @@
   function enviarPorCorreo(datos) {
     var cuerpo = [
       "Nombre: " + datos.nombre,
-      "Empresa: " + datos.empresa,
+      datos.empresa ? "Empresa: " + datos.empresa : null,
       "Email: " + datos.email,
-      "Teléfono: " + datos.telefono,
-      "Pieza o material: " + datos.pieza,
-      "Cantidad: " + datos.cantidad,
-      "Tipo de trabajo: " + datos.trabajo,
+      datos.telefono ? "Teléfono: " + datos.telefono : null,
       "",
-      "Detalle:",
+      "Qué necesita arenar:",
       datos.mensaje
-    ].join("\r\n");
+    ].filter(function (l) { return l !== null; }).join("\r\n");
     var url = "mailto:" + MAIL_RESPALDO +
-              "?subject=" + encodeURIComponent("Solicitud de presupuesto — " + datos.nombre) +
+              "?subject=" + encodeURIComponent("Consulta de presupuesto — " + datos.nombre) +
               "&body=" + encodeURIComponent(cuerpo);
     window.location.href = url;
-    mostrar(okBox, "Se abrió el cliente de correo con la solicitud redactada. " +
+    mostrar(okBox, "Se abrió el cliente de correo con la consulta redactada. " +
                    "Si no se abrió, escriba a " + MAIL_RESPALDO + ".");
     ocupado(false);
   }
@@ -214,7 +211,7 @@
       invalid(email, "Ingrese un correo electrónico válido."); errores++;
     }
     if (mensaje.value.trim().length < 10) {
-      invalid(mensaje, "Describa el trabajo en al menos una línea."); errores++;
+      invalid(mensaje, "Indique qué pieza o material necesita arenar."); errores++;
     }
 
     if (errores) {
@@ -236,16 +233,13 @@
       empresa: form.empresa.value.trim(),
       email: email.value.trim(),
       telefono: form.telefono.value.trim(),
-      pieza: form.pieza.value.trim(),
-      cantidad: form.cantidad.value.trim(),
-      trabajo: form.trabajo.value,
       mensaje: mensaje.value.trim()
     };
 
     if (sinConfigurar) { enviarPorCorreo(datos); return; }
 
     var cuerpo = new FormData(form);
-    cuerpo.append("_subject", "Solicitud de presupuesto — " + datos.nombre);
+    cuerpo.append("_subject", "Consulta de presupuesto — " + datos.nombre);
     ocupado(true);
 
     fetch(FORM_ENDPOINT, {
@@ -259,12 +253,12 @@
       })
       .then(function () {
         form.reset();
-        mostrar(okBox, "Su solicitud fue recibida. La respuesta se enviará dentro de las 24 horas hábiles.");
+        mostrar(okBox, "Su consulta fue recibida. La respuesta se enviará dentro de las 24 horas hábiles.");
         ocupado(false);
       })
       .catch(function () {
         ocupado(false);
-        mostrar(errBox, "No fue posible enviar la solicitud. Intente nuevamente o escriba a " + MAIL_RESPALDO + ".");
+        mostrar(errBox, "No fue posible enviar la consulta. Intente nuevamente o escriba a " + MAIL_RESPALDO + ".");
       });
   });
 })();

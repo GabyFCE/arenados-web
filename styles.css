@@ -436,7 +436,17 @@ select:focus-visible, textarea:focus-visible {
   outline: none;
 }
 .field.is-invalid input, .field.is-invalid select, .field.is-invalid textarea { border-color: #B03A2E; background: #FDF6F5; }
+.field label .opt {
+  font-weight: 400;
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 .field__err { font-size: 12.5px; color: #B03A2E; display: none; }
+
+.field__hint { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
 .field.is-invalid .field__err { display: block; }
 .form__foot { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 8px; }
 .form__legal { font-size: 12.5px; color: var(--muted); margin: 0; max-width: 34ch; }

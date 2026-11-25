@@ -46,12 +46,28 @@ El comparador antes/después espera pares con nombre fijo dentro de `assets/`:
 <pieza>-despues.jpg
 ```
 
-Las cinco piezas actuales: `bloque-motor`, `carcasa-bomba`, `carcasa-gases`,
-`cartera-compresor`, `cuadro-moto`. Para reemplazar una foto, se sobrescribe el archivo
-con el mismo nombre y no hay que tocar el HTML.
+Las cinco piezas: `bloque-motor`, `carcasa-bomba`, `carcasa-gases`, `cartera-compresor`,
+`cuadro-moto`. Para reemplazar una foto, se sobrescribe el archivo con el mismo nombre y no
+hay que tocar el HTML.
 
 Las imágenes actuales son generadas: antes de publicar hay que reemplazarlas por fotos
 reales y borrar el aviso del final de la sección.
+
+### Cómo se arman las fotos generadas
+
+Los pares se arman fuera de este repo, en `~/arenados-web`:
+
+1. el modelo de imagen dibuja la pieza oxidada en un taller fijo (`pares3/<slug>-base.png`);
+2. una edición de esa misma foto devuelve la pieza arenada (`pares3/<slug>-clean.png`);
+3. `pares.py` reemplaza sólo los píxeles de la pieza y exporta a 1400 px.
+
+El paso 3 es el que garantiza el entorno idéntico: fuera del contorno de la pieza, los dos
+archivos del par son los mismos píxeles. Detalle, parámetros y trampas: skill
+`pares-antes-despues-arenado`.
+
+**Pendiente al reemplazar las fotos**: el par del motor pasa a `motor-electrico` (era un
+bloque de motor que aparecía flotando) y `cartera-compresor` está mal escrito — es `cárter`.
+Renombrar archivos y actualizar el HTML en el mismo commit.
 
 Recomendaciones: JPEG, 1400 px de ancho, menos de 300 KB cada una; las dos fotos de un par
 tienen que estar encuadradas igual para que el comparador no salte.

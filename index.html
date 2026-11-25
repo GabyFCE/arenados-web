@@ -10,7 +10,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Arenados — Arenado industrial en Zona Norte GBA">
 <meta property="og:description" content="Recuperación de piezas metálicas: se retira el óxido y la pintura vieja, y la pieza vuelve al servicio.">
-<meta property="og:image" content="assets/cartera-compresor-despues.jpg">
+<meta property="og:image" content="assets/carter-compresor-despues.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -256,24 +256,24 @@
     <div class="galeria">
       <figure class="galeria__item galeria__item--wide">
         <div class="ba" data-ba>
-          <img class="ba__img" src="assets/cartera-compresor-despues.jpg" alt="Cartera de compresor después del arenado" loading="lazy">
-          <div class="ba__clip"><img src="assets/cartera-compresor-antes.jpg" alt="Cartera de compresor antes del arenado" loading="lazy"></div>
+          <img class="ba__img" src="assets/carter-compresor-despues.jpg" alt="Cárter de compresor después del arenado" loading="lazy">
+          <div class="ba__clip"><img src="assets/carter-compresor-antes.jpg" alt="Cárter de compresor antes del arenado" loading="lazy"></div>
           <span class="ba__tag ba__tag--l">Antes</span>
           <span class="ba__tag ba__tag--r">Después</span>
           <span class="ba__handle" aria-hidden="true"></span>
         </div>
-        <figcaption><b>Cartera de compresor</b> — fundición, con brida de cilindro y boca de cigüeñal.</figcaption>
+        <figcaption><b>Cárter de compresor</b> — fundición de aluminio, con brida de cilindro y alojamiento del cigüeñal.</figcaption>
       </figure>
 
       <figure class="galeria__item">
         <div class="ba" data-ba>
-          <img class="ba__img" src="assets/bloque-motor-despues.jpg" alt="Bloque de motor después del arenado" loading="lazy">
-          <div class="ba__clip"><img src="assets/bloque-motor-antes.jpg" alt="Bloque de motor antes del arenado" loading="lazy"></div>
+          <img class="ba__img" src="assets/motor-electrico-despues.jpg" alt="Motor eléctrico de compresor después del arenado" loading="lazy">
+          <div class="ba__clip"><img src="assets/motor-electrico-antes.jpg" alt="Motor eléctrico de compresor antes del arenado" loading="lazy"></div>
           <span class="ba__tag ba__tag--l">Antes</span>
           <span class="ba__tag ba__tag--r">Después</span>
           <span class="ba__handle" aria-hidden="true"></span>
         </div>
-        <figcaption><b>Bloque de motor</b> — cuatro cilindros, sin accesorios.</figcaption>
+        <figcaption><b>Motor eléctrico de compresor</b> — carcasa con aletas de enfriamiento, caja de bornes y base de anclaje.</figcaption>
       </figure>
 
       <figure class="galeria__item">
@@ -295,7 +295,7 @@
           <span class="ba__tag ba__tag--r">Después</span>
           <span class="ba__handle" aria-hidden="true"></span>
         </div>
-        <figcaption><b>Carcasa de bomba</b> — acero, con picaduras de óxido.</figcaption>
+        <figcaption><b>Carcasa de bomba</b> — fundición gris, con dos bridas y patas de anclaje.</figcaption>
       </figure>
 
       <figure class="galeria__item">
@@ -329,7 +329,7 @@
           completa por teléfono.
         </p>
         <ul class="pasos-lista">
-          <li><span>01</span><span><b>Fotografía de la pieza</b>Del estado actual. Una imagen tomada con el teléfono es suficiente.</span></li>
+          <li><span>01</span><span><b>Fotografía de la pieza</b>Del estado actual. Una imagen del teléfono alcanza; si no la tiene a mano, se solicita después.</span></li>
           <li><span>02</span><span><b>Material y cantidad</b>Hierro, acero, aluminio o fundición. Cantidad de unidades y tamaño aproximado.</span></li>
           <li><span>03</span><span><b>Tipo de terminación</b>Solo limpieza, o limpieza con protección anticorrosiva.</span></li>
         </ul>
@@ -346,7 +346,7 @@
             <span class="field__err">Ingrese su nombre.</span>
           </div>
           <div class="field">
-            <label for="empresa">Empresa</label>
+            <label for="empresa">Empresa <span class="opt">opcional</span></label>
             <input id="empresa" name="empresa" type="text" autocomplete="organization">
             <span class="field__err"></span>
           </div>
@@ -359,39 +359,18 @@
             <span class="field__err">Ingrese un correo electrónico válido.</span>
           </div>
           <div class="field">
-            <label for="telefono">Teléfono</label>
+            <label for="telefono">Teléfono <span class="opt">opcional</span></label>
             <input id="telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel">
             <span class="field__err"></span>
           </div>
         </div>
 
-        <div class="form__row">
-          <div class="field">
-            <label for="pieza">Pieza o material</label>
-            <input id="pieza" name="pieza" type="text" placeholder="Carcasa de bomba">
-            <span class="field__err"></span>
-          </div>
-          <div class="field">
-            <label for="cantidad">Cantidad</label>
-            <input id="cantidad" name="cantidad" type="text" placeholder="10 unidades">
-            <span class="field__err"></span>
-          </div>
-        </div>
-
         <div class="field">
-          <label for="trabajo">Tipo de trabajo</label>
-          <select id="trabajo" name="trabajo">
-            <option value="Solo limpieza">Solo limpieza</option>
-            <option value="Limpieza y protección anticorrosiva">Limpieza y protección anticorrosiva</option>
-            <option value="A definir con asesoramiento">A definir con asesoramiento</option>
-          </select>
-          <span class="field__err"></span>
-        </div>
-
-        <div class="field">
-          <label for="mensaje">Descripción del trabajo <span class="req">*</span></label>
-          <textarea id="mensaje" name="mensaje" required placeholder="Estado de la pieza, medidas, plazos y zonas que deben conservarse."></textarea>
-          <span class="field__err">Describa el trabajo en al menos una línea.</span>
+          <label for="mensaje">Detalle del trabajo <span class="req">*</span></label>
+          <textarea id="mensaje" name="mensaje" required
+            placeholder="Ej.: 10 carcasas de bomba de hierro, solo limpieza."></textarea>
+          <span class="field__err">Indique qué pieza o material necesita arenar.</span>
+          <span class="field__hint">Indique pieza o material, cantidad aproximada y terminación. Si cuenta con fotografías, se las solicitamos al responder.</span>
         </div>
 
         <!-- trampa antibot: invisible para personas, los robots la completan -->
@@ -409,7 +388,7 @@
         </div>
 
         <div class="form__ok" id="formOk" role="status">
-          <p data-msg>Su solicitud fue recibida. La respuesta se enviará dentro de las 24 horas hábiles.</p>
+          <p data-msg>Su consulta fue recibida. La respuesta se enviará dentro de las 24 horas hábiles.</p>
         </div>
 
         <div class="form__err" id="formErr" role="alert">
