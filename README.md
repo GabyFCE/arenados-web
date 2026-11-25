@@ -26,18 +26,21 @@ sitio/
 ├── index.html    estructura y textos
 ├── styles.css    sistema visual: paleta, tipografía, componentes, responsive
 ├── script.js     menú móvil, animaciones, comparador antes/después, formulario
-├── favicon.svg   ícono vectorial, el que usan los navegadores actuales
 ├── favicon-*.png íconos de 16, 32 (pestaña) y 180 (pantalla de inicio en iPhone)
 ├── favicon.ico   respaldo para marcadores viejos
 └── assets/       10 fotos (antes/después de 5 piezas), recortadas a 1400 px
 ```
 
-El favicon se genera desde `~/arenados-web/favicon.py`: una sola geometría produce el SVG y
-todos los PNG/ICO. Si cambia la paleta, se corren de nuevo:
+El favicon se genera desde `~/arenados-web/favicon.py`, con dos variantes:
 
 ```bash
-python3 ../favicon.py .
+python3 ../favicon.py .            # boquilla de arenado (sale también en SVG)
+python3 ../favicon.py . --letra    # monograma A (sólo PNG e ICO)
 ```
+
+La que está publicada es el monograma A: a 16 px la boquilla se empasta y la letra no.
+El SVG existe sólo para la boquilla, porque ésa se dibuja como polígonos; la A sale de una
+tipografía y un vector obligaría a depender de la fuente del que mira.
 
 Secciones de la página, en orden: hero → datos → proceso → casos de uso → trabajos
 (comparador) → cotizar → pie de contacto.
