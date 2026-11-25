@@ -99,8 +99,7 @@ Es un sitio estático: no necesita servidor de aplicaciones ni base de datos.
   directorio de salida que configurar.
 - **GitHub Pages**: requiere repositorio público, rama `main` y carpeta raíz.
 
-Conviene cachear `assets/` por mucho tiempo y `index.html` por poco, para no servir versiones
-viejas.
+Para no servir versiones viejas, `assets/` va con caché larga e `index.html` con caché corta.
 
 ## Contenido
 

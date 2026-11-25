@@ -207,7 +207,7 @@ select:focus-visible, textarea:focus-visible {
   position: absolute;
   inset: 0;
   z-index: -2;
-  background-image: url("assets/cartera-compresor-despues.jpg");
+  background-image: url("assets/carter-compresor-despues.jpg");
   background-size: cover;
   background-position: 62% 42%;
   filter: grayscale(.35) contrast(1.02) brightness(.62);
