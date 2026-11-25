@@ -6,7 +6,7 @@ Sitio web de una página para un servicio de arenado industrial en Zona Norte de
 
 ## Qué es y para qué sirve
 
-El comprador técnico que busca un servicio de arenado necesita verificar si el proveedor es apto para su pieza y conocer los plazos operativos. El sitio resuelve esta consulta en una sola vista sin navegación interna y presenta el formulario de contacto de forma directa:
+El comprador técnico que busca un servicio de arenado necesita verificar si el proveedor es apto para su pieza y conocer los plazos operativos. El sitio resuelve esta consulta en una sola página y presenta el formulario de contacto de forma directa:
 
 - Detalla qué elementos se retiran (óxido, pintura vieja, suciedad adherida) y el estado final de la pieza (lista para pintar, soldar o evaluar).
 - Muestra el resultado del proceso mediante un comparador visual de antes y después sobre cinco piezas distintas.
@@ -17,8 +17,9 @@ El comprador técnico que busca un servicio de arenado necesita verificar si el 
 | Sección | Contenido |
 | --- | --- |
 | Portada | Propuesta de servicio, dos llamados a la acción y tres datos operativos |
+| Datos | Cuatro características del servicio en una franja: sin óxido, lista para pintar, plazo y medidas |
 | Proceso | Dos etapas: evaluación de la pieza y limpieza por proyección de abrasivo |
-| Aplicaciones | Piezas típicas por rubro: fundición, maquinaria, automotor y estructuras |
+| Aplicaciones | Seis tipos de pieza: carcasas y tapas, motores eléctricos, cárteres de compresores y bombas, estructuras soldadas, chasis y cuadros, piezas de fundición |
 | Antes y después | Cinco comparadores interactivos con control deslizante |
 | Cotización | Formulario de solicitud de presupuesto |
 | Contacto | Teléfono, correo electrónico y dirección física |
@@ -27,10 +28,10 @@ El comprador técnico que busca un servicio de arenado necesita verificar si el 
 
 ## Decisiones técnicas
 
-- **HTML, CSS y JavaScript sin dependencias**: Se descarta el uso de frameworks y empaquetadores para evitar `node_modules` y pasos de compilación. Permite editar y recargar directamente. El sitio completo pesa 1,8 MB (1,7 MB corresponden a las diez fotografías).
-- **Comparador mediante recorte CSS (`clip-path: inset()`)**: Se descarta el uso de `<canvas>` o librerías externas. Usa dos imágenes superpuestas y una variable CSS, evitando cálculos de repintado. Responde a mouse, pantallas táctiles y teclado; sin JavaScript muestra ambas mitades al 50 %.
+- **HTML, CSS y JavaScript sin dependencias**: Se descarta el uso de frameworks y empaquetadores para evitar `node_modules` y pasos de compilación. Permite editar y recargar directamente. El sitio pesa 1,8 MB sin contar `docs/`; 1,7 MB son las diez fotografías.
+- **Comparador mediante recorte CSS (`clip-path: inset()`)**: Se descarta el uso de `<canvas>` o librerías externas. Usa dos imágenes superpuestas y un valor de `clip-path` que fija el control, sin repintar canvas. Responde a mouse, pantallas táctiles y teclado; sin JavaScript muestra ambas mitades al 50 %.
 - **Tipografía única externa**: Se carga únicamente la familia Inter (cuatro pesos) desde Google Fonts. Para etiquetas y cifras se utiliza la fuente monoespaciada del sistema operativo, evitando la descarga de una segunda fuente.
-- **Imágenes con carga diferida**: Diez archivos JPEG de 1264 × 848 px (entre 141 y 178 KB cada uno) con atributo `loading="lazy"`, excepto el primer par, para no bloquear la carga inicial.
+- **Imágenes con carga diferida**: Diez archivos JPEG de 1264 × 848 px (entre 141 y 178 KB cada uno) con atributo `loading="lazy"` en las diez.
 - **Aparición de bloques con `IntersectionObserver`**: Se descarta la escucha del evento `scroll` para evitar ejecuciones continuas durante el desplazamiento. Las animaciones se desactivan si el sistema indica `prefers-reduced-motion`.
 - **Envío de formulario mediante `fetch` con degradación a `mailto:`**: Se descarta la recarga de página del envío nativo. Envía un `POST` con `FormData` a un endpoint configurable; si el endpoint no está configurado, abre el cliente de correo local con el mensaje redactado. Incluye un campo oculto (honeypot) en lugar de CAPTCHA para filtrar bots sin intervención del usuario.
 
