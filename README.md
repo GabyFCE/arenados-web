@@ -26,7 +26,17 @@ sitio/
 ├── index.html    estructura y textos
 ├── styles.css    sistema visual: paleta, tipografía, componentes, responsive
 ├── script.js     menú móvil, animaciones, comparador antes/después, formulario
+├── favicon.svg   ícono vectorial, el que usan los navegadores actuales
+├── favicon-*.png íconos de 16, 32 (pestaña) y 180 (pantalla de inicio en iPhone)
+├── favicon.ico   respaldo para marcadores viejos
 └── assets/       10 fotos (antes/después de 5 piezas), recortadas a 1400 px
+```
+
+El favicon se genera desde `~/arenados-web/favicon.py`: una sola geometría produce el SVG y
+todos los PNG/ICO. Si cambia la paleta, se corren de nuevo:
+
+```bash
+python3 ../favicon.py .
 ```
 
 Secciones de la página, en orden: hero → datos → proceso → casos de uso → trabajos
