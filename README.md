@@ -17,7 +17,7 @@ El comprador técnico que busca un servicio de arenado necesita verificar si el 
 | Sección | Contenido |
 | --- | --- |
 | Portada | Propuesta de servicio, dos llamados a la acción y tres datos operativos |
-| Proceso | Cuatro pasos: diagnóstico, preparación, arenado y control final |
+| Proceso | Dos etapas: evaluación de la pieza y limpieza por proyección de abrasivo |
 | Aplicaciones | Piezas típicas por rubro: fundición, maquinaria, automotor y estructuras |
 | Antes y después | Cinco comparadores interactivos con control deslizante |
 | Cotización | Formulario de solicitud de presupuesto |
