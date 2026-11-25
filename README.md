@@ -1,23 +1,16 @@
-# Sitio web de Arenados
+# arenados-web
 
-Sitio institucional de una página para un servicio de arenado industrial en Zona Norte del
-Gran Buenos Aires. Presenta el servicio, muestra el resultado sobre piezas de taller y recibe
-pedidos de presupuesto.
+Sitio web de una página para un servicio de arenado industrial en Zona Norte del Gran Buenos Aires, dirigido a compradores técnicos de talleres, plantas y áreas de mantenimiento.
 
-![Portada del sitio](docs/portada.jpg)
+![Vista principal del sitio](docs/portada.jpg)
 
 ## Qué es y para qué sirve
 
-El visitante es un comprador técnico —taller, planta, mantenimiento— que ya sabe qué es el
-arenado y necesita resolver dos cosas: si este proveedor sirve para su pieza y cuánto tarda.
-La página responde eso sin hacerlo navegar y le deja el formulario a mano.
+El comprador técnico que busca un servicio de arenado necesita verificar si el proveedor es apto para su pieza y conocer los plazos operativos. El sitio resuelve esta consulta en una sola vista sin navegación interna y presenta el formulario de contacto de forma directa:
 
-Concretamente:
-
-- Explica qué se retira (óxido, pintura vieja, suciedad adherida) y en qué estado queda la
-  pieza: lista para pintar, soldar o evaluar.
-- Muestra el resultado con un comparador antes/después sobre cinco piezas distintas.
-- Ordena la consulta con un formulario de cinco campos, de los cuales tres son obligatorios.
+- Detalla qué elementos se retiran (óxido, pintura vieja, suciedad adherida) y el estado final de la pieza (lista para pintar, soldar o evaluar).
+- Muestra el resultado del proceso mediante un comparador visual de antes y después sobre cinco piezas distintas.
+- Estructura el pedido de presupuesto con un formulario de cinco campos (tres obligatorios).
 
 ## Qué incluye
 
@@ -26,61 +19,38 @@ Concretamente:
 | Portada | Propuesta de servicio, dos llamados a la acción y tres datos operativos |
 | Proceso | Cuatro pasos: diagnóstico, preparación, arenado y control final |
 | Aplicaciones | Piezas típicas por rubro: fundición, maquinaria, automotor y estructuras |
-| Antes y después | Cinco comparadores con control deslizante |
-| Cotización | Formulario de presupuesto |
-| Contacto | Teléfono, correo y dirección |
+| Antes y después | Cinco comparadores interactivos con control deslizante |
+| Cotización | Formulario de solicitud de presupuesto |
+| Contacto | Teléfono, correo electrónico y dirección física |
 
-![Comparador antes y después](docs/comparador.jpg)
+![Sección antes y después](docs/comparador.jpg)
 
 ## Decisiones técnicas
 
-**Sin dependencias ni compilación.** HTML, CSS y JavaScript plano. No hay `node_modules`, ni
-paso de build, ni framework: se edita un archivo y se recarga. El sitio completo pesa 1,8 MB,
-de los cuales 1,7 MB son las diez imágenes del comparador.
-
-**El comparador son dos imágenes superpuestas.** No hay canvas ni librería de comparación: las
-dos fotos están en el mismo encuadre y el control mueve un recorte (`clip-path: inset()`) sobre
-la capa superior. Son dos imágenes y una variable de CSS. Responde al mouse, al dedo y a las
-flechas del teclado, y sin JavaScript queda dividido al 50 %.
-
-**Una sola descarga de fuentes.** Inter con cuatro pesos desde Google Fonts; las etiquetas y
-las cifras usan la monoespaciada del sistema, así que no hay una segunda familia que cargar.
-
-**Imágenes optimizadas.** Diez JPEG de 1264 × 848, de entre 141 y 178 KB, con carga diferida
-(`loading="lazy"`) salvo las del primer comparador.
-
-**Animaciones sin costo por scroll.** Las apariciones se disparan con `IntersectionObserver`
-cuando el bloque entra en pantalla, en lugar de escuchar el evento de scroll. Todo el
-movimiento se anula con `prefers-reduced-motion`.
-
-**El formulario no recarga la página.** Valida en el navegador, muestra el error debajo del
-campo y envía con `fetch` a un endpoint configurable: sirve cualquier servicio que acepte un
-`POST` con `FormData`. Si el endpoint conserva el marcador, arma la consulta y abre el cliente
-de correo con el texto ya redactado. Incluye un campo trampa invisible para los bots que
-completan todo lo que encuentran.
-
-**Accesibilidad resuelta en el maquetado.** Foco visible en todos los controles, etiquetas
-asociadas a cada campo, nombre accesible en el control del comparador y avisos del formulario
-anunciados con `role="status"`. Los textos principales superan 15:1 de contraste.
-
-**Íconos por densidad.** PNG de 16, 32 y 180 px más un ICO de respaldo para marcadores viejos,
-todos con el mismo monograma.
+- **HTML, CSS y JavaScript sin dependencias**: Se descarta el uso de frameworks y empaquetadores para evitar `node_modules` y pasos de compilación. Permite editar y recargar directamente. El sitio completo pesa 1,8 MB (1,7 MB corresponden a las diez fotografías).
+- **Comparador mediante recorte CSS (`clip-path: inset()`)**: Se descarta el uso de `<canvas>` o librerías externas. Usa dos imágenes superpuestas y una variable CSS, evitando cálculos de repintado. Responde a mouse, pantallas táctiles y teclado; sin JavaScript muestra ambas mitades al 50 %.
+- **Tipografía única externa**: Se carga únicamente la familia Inter (cuatro pesos) desde Google Fonts. Para etiquetas y cifras se utiliza la fuente monoespaciada del sistema operativo, evitando la descarga de una segunda fuente.
+- **Imágenes con carga diferida**: Diez archivos JPEG de 1264 × 848 px (entre 141 y 178 KB cada uno) con atributo `loading="lazy"`, excepto el primer par, para no bloquear la carga inicial.
+- **Aparición de bloques con `IntersectionObserver`**: Se descarta la escucha del evento `scroll` para evitar ejecuciones continuas durante el desplazamiento. Las animaciones se desactivan si el sistema indica `prefers-reduced-motion`.
+- **Envío de formulario mediante `fetch` con degradación a `mailto:`**: Se descarta la recarga de página del envío nativo. Envía un `POST` con `FormData` a un endpoint configurable; si el endpoint no está configurado, abre el cliente de correo local con el mensaje redactado. Incluye un campo oculto (honeypot) en lugar de CAPTCHA para filtrar bots sin intervención del usuario.
 
 ## Estructura
 
-```
-index.html       página completa: secciones, textos y metadatos
-styles.css       sistema visual: variables, componentes y responsive
-script.js        comparador, menú móvil, animaciones y formulario
-favicon-16.png   16 px, pestaña
-favicon-32.png   32 px, pantallas de alta densidad
-favicon-180.png  180 px, pantalla de inicio en iOS
-favicon.ico      respaldo para marcadores
-assets/          diez JPEG del comparador, 1264 × 848
-docs/            capturas usadas en este README
+```text
+assets/                            Diez JPEG de 1264 × 848: cinco pares antes/después
+docs/comparador.jpg                Captura de la sección de comparación para documentación
+docs/portada.jpg                   Captura de la portada para documentación
+favicon-16.png                     Ícono de 16 px para pestaña de navegador
+favicon-180.png                    Ícono de 180 px para pantalla de inicio en iOS
+favicon-32.png                     Ícono de 32 px para pantallas de alta densidad
+favicon.ico                        Ícono de respaldo para marcadores
+index.html                         Documento principal con estructura, textos y metadatos
+script.js                          Lógica del comparador, menú móvil, observador y formulario
+scripts/hooks/pre-commit           Hook de Git para verificaciones previas al commit
+styles.css                         Variables, maquetado, componentes y reglas adaptativas
 ```
 
-## Cómo verlo
+## Cómo se usa
 
 Alcanza con abrir `index.html` en el navegador. Para probarlo servido por HTTP, que es como se
 comporta una vez publicado:
@@ -90,19 +60,16 @@ python3 -m http.server 8000
 # http://127.0.0.1:8000
 ```
 
-## Cómo publicarlo
+## Cómo se despliega
 
-Es un sitio estático: no necesita servidor de aplicaciones ni base de datos.
+Al ser un sitio estático, no requiere servidor de aplicaciones ni base de datos:
 
-- **Hosting compartido**: subir el contenido respetando la carpeta `assets/`.
-- **Netlify, Vercel o Cloudflare Pages**: conectar el repositorio; no hay comando de build ni
-  directorio de salida que configurar.
-- **GitHub Pages**: requiere repositorio público, rama `main` y carpeta raíz.
+- **Hosting tradicional**: Subir los archivos de la raíz y el directorio `assets/` respetando las rutas relativas.
+- **Netlify, Vercel o Cloudflare Pages**: Conectar el repositorio sin comando de compilación y con la raíz (`/`) como directorio de salida.
+- **GitHub Pages**: Publicar desde la rama `main` seleccionando la carpeta raíz (`/`).
 
-Para no servir versiones viejas, `assets/` va con caché larga e `index.html` con caché corta.
+En la configuración del servidor, asignar caché de larga duración a `assets/` y caché corta o sin caché a `index.html`.
 
-## Contenido
+## Estado del contenido
 
-Las imágenes del comparador son ilustraciones generadas y la página lo declara en un aviso al
-pie de esa sección. Los datos de contacto del pie son provisorios: el sitio queda listo para
-publicarse cuando se reemplacen por los reales.
+Las diez imágenes de la sección de comparación son ilustraciones generadas a modo de muestra; un aviso al pie de esa sección lo declara. Los datos de contacto (teléfono, correo y dirección) y la dirección de envío del formulario figuran como marcadores de posición que deben reemplazarse por los datos definitivos antes de publicar.
